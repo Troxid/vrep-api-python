@@ -1,0 +1,13 @@
+setup.cfg
+setup.py
+vrep-api-python/common.py
+vrep-api-python/joints.py
+vrep-api-python/sensors.py
+vrep-api-python/simulationstate.py
+vrep-api-python/vrep.py
+vrep-api-python/vrepConst.py
+vrep-api-python/vrepapi.py
+vrep_api_python.egg-info/PKG-INFO
+vrep_api_python.egg-info/SOURCES.txt
+vrep_api_python.egg-info/dependency_links.txt
+vrep_api_python.egg-info/top_level.txt

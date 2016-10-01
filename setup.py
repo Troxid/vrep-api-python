@@ -1,19 +1,10 @@
-from setuptools import setup, find_packages
-
-from codecs import open
-from os import path
-
-here = path.abspath(path.dirname(__file__))
-
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
+from setuptools import setup
 
 setup(
     name='vrep-api-python',
     packages=['vrep-api-python'],
     version='0.1.0',
     description='Simple python binding for V-REP robotics simulator',
-    long_description=long_description,
     url='https://github.com/Troxid/vrep-api-python',
     author='troxid',
     author_email='troxid@yandex.ru',
