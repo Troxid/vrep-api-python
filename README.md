@@ -1,23 +1,25 @@
 # v-rep python
+
 Simple python binding for
-[Coppelia Robotics V-REP simulator](http://www.coppeliarobotics.com/) ([remote API](http://www.coppeliarobotics.com/helpFiles/en/remoteApiOverview.htm))
+[Coppelia Robotics V-REP simulator](http://www.coppeliarobotics.com/) ([remote API](http://www.coppeliarobotics.com/helpFiles/en/remoteApiOverview.htm)) of version 3.3.0
 
 ## Getting started
-0. Requirements: CPython >= 3.5.2 version, pip
+
+0. Requirements: CPython version >= 3.5.2, pip
 1. Install library from PyPI by entering this command:
-    `pip install vrep-python`
-2. Create environment variable with path to platform-specific native library (remoteApi):
-    `VREP_LIBRARY="vrep_folder/programming/remoteApiBindings/lib/lib/64Bit/"`
+```bash
+[sudo] pip install 'git+https://github.com/Troxid/vrep-api-python'
+```
+
+## V-Rep specific
+Package needs platform-specific native library (remoteApi). It uses two enviroment variables `VREP` and `VREP_LIBRARY`. If `VREP` is unspecified package will use default `/usr/share/vrep` for it. If `VREP_LIBRARY` is also unspecified, then it will concatenate `VREP` with `programming/remoteApiBindings/lib/lib/64Bit/`. This setup was test tested under **LINUX ONLY**. We are open for debug under Windows.
     * For windows users:
         *NOT TESTED*
-    * For linux users:
-        Add `export VREP_LIBRARY="vrep_folder/programming/remoteApiBindings/lib/lib/64Bit/"`
-        to `.bashrc`
     
-3. Find the socket port number in `V-REP/remoteApiConnections.txt` and use
-    it to connect to the server simulator
+To use package you will need the socket port number, which can be located in `V-REP/remoteApiConnections.txt`.
 
 ## Currently implemented things
+
 In the current version is not implemented features such as remote management GUI,
 additional configuration properties of objects and shapes, etc.
 Basically implemented those components that are required to control the robot:
@@ -29,18 +31,19 @@ Basically implemented those components that are required to control the robot:
 * ~~Remote function calls~~
 
 ## Example
+Designed to be used with `examples/Pioneer.ttt`.
 ```python
-from vrepapi import VRepApi
+from pyrep import VRep
 import time
 
 class PioneerP3DX:
 
-    def __init__(self, api: VRepApi):
+    def __init__(self, api: VRep):
         self._api = api
-        self._left_motor = api.joint.with_velocity_control("left_motor")
-        self._right_motor = api.joint.with_velocity_control("right_motor")
-        self._left_sensor = api.sensor.proximity("left_sensor")
-        self._right_sensor = api.sensor.proximity("right_sensor")
+        self._left_motor = api.joint.with_velocity_control("Pioneer_p3dx_leftMotor")
+        self._right_motor = api.joint.with_velocity_control("Pioneer_p3dx_rightMotor")
+        self._left_sensor = api.sensor.proximity("Pioneer_p3dx_ultrasonicSensor3")
+        self._right_sensor = api.sensor.proximity("Pioneer_p3dx_ultrasonicSensor6")
 
     def rotate_right(self, speed=2.0):
         self._set_two_motor(speed, -speed)
@@ -64,23 +67,20 @@ class PioneerP3DX:
     def left_length(self):
         return self._left_sensor.read()[1].distance()
 
-api = VRepApi.connect("127.0.0.1", 19997)
+with VRep.connect("127.0.0.1", 19997) as api:
+    r = PioneerP3DX(api)
+    while True:
+        rl = r.right_length()
+        ll = r.left_length()
+        if rl > 0.01 and rl < 10:
+            r.rotate_left()
+        elif ll > 0.01 and ll < 10:
+            r.rotate_right()
+        else:
+            r.move_forward()
+        time.sleep(0.1)
 
-api.simulation.start()
-
-r = PioneerP3DX(api)
-for _ in range(100):
-    rl = r.right_length()
-    ll = r.left_length()
-    if rl != 0 and rl < 10:
-        r.rotate_left()
-    elif ll != 0 and ll < 10:
-        r.rotate_right()
-    else:
-        r.move_forward()
-    time.sleep(0.1)
-
-api.simulation.pause()
 ```
+
 
 

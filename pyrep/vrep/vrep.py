@@ -31,11 +31,17 @@ import platform
 import struct
 import sys
 import ctypes as ct
-from vrepConst import *
+from .vrepConst import *
 
 #load library
 libsimx = None
-library_dir = os.environ['VREP_LIBRARY']
+if 'VREP_LIBRARY' in os.environ and os.path.exists(os.environ['VREP_LIBRARY']):
+    library_dir = os.environ['VREP_LIBRARY']
+else:
+    library_dir = os.path.join(
+        os.environ['VREP'], "programming/remoteApiBindings/lib/lib/64Bit/")
+if not os.path.exists(library_dir):
+    raise OSError("V-Rep library directory {} does not exist!".format(library_dir))
 try:
     if platform.system() =='cli':
         libsimx = ct.CDLL(library_dir + "remoteApi.dll")

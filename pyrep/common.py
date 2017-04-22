@@ -1,5 +1,5 @@
 import math
-import vrep as v
+from .vrep import vrep as v
 
 
 class Vec3:

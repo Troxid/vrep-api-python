@@ -1,9 +1,9 @@
 from setuptools import setup
 
 setup(
-    name='vrep-api-python',
-    packages=['vrep-api-python'],
-    version='0.1.0',
+    name='pyrep',
+    packages=['pyrep', 'pyrep.vrep'],
+    version='0.2.0',
     description='Simple python binding for V-REP robotics simulator',
     url='https://github.com/Troxid/vrep-api-python',
     author='troxid',
@@ -27,5 +27,5 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: Implementation :: CPython'
     ],
-    data_files=[('scenes', ['scenes/Pioneer.ttt', 'scenes/sceneLabWork.ttt', 'testAllComponents.ttt'])]
+    data_files=[('scenes', ['scenes/Pioneer.ttt', 'scenes/testAllComponents.ttt'])]
 )
