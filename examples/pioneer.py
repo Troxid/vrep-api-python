@@ -1,10 +1,10 @@
-from vrepapi import VRepApi
+from pyrep import VRep
 import time
 
 
 class PioneerP3DX:
 
-    def __init__(self, api: VRepApi):
+    def __init__(self, api: VRep):
         self._api = api
         self._left_motor = api.joint.with_velocity_control("Pioneer_p3dx_leftMotor")
         self._right_motor = api.joint.with_velocity_control("Pioneer_p3dx_rightMotor")
@@ -33,23 +33,21 @@ class PioneerP3DX:
     def left_length(self):
         return self._left_sensor.read()[1].distance()
 
-api = VRepApi.connect("127.0.0.1", 19997)
+with VRep.connect("127.0.0.1", 19997) as api:
+    #api.simulation.start()
+    r = PioneerP3DX(api)
+    while True: #for _ in range(100):
+        rl = r.right_length()
+        ll = r.left_length()
+        if rl > 0.01 and rl < 10:
+            r.rotate_left()
+        elif ll > 0.01 and ll < 10:
+            r.rotate_right()
+        else:
+            r.move_forward()
+        time.sleep(0.1)
 
-api.simulation.start()
-
-r = PioneerP3DX(api)
-for _ in range(100):
-    rl = r.right_length()
-    ll = r.left_length()
-    if rl != 0 and rl < 10:
-        r.rotate_left()
-    elif ll != 0 and ll < 10:
-        r.rotate_right()
-    else:
-        r.move_forward()
-    time.sleep(0.1)
-
-api.simulation.stop()
+#api.simulation.stop()
 
 
 

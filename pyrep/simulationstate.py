@@ -1,5 +1,5 @@
-import vrep as v
-import vrepConst as vc
+from .vrep import vrep as v
+from .vrep import vrepConst as vc
 
 
 class SimulationState:

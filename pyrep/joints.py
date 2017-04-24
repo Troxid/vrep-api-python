@@ -1,6 +1,6 @@
-import vrep as v
-import vrepConst as vc
-from common import NotFoundComponentError, MatchObjTypeError
+from .vrep import vrep as v
+from .vrep import vrepConst as vc
+from .common import NotFoundComponentError, MatchObjTypeError
 
 class AnyJoint:
     def __init__(self, id, handle):

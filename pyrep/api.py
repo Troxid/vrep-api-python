@@ -1,8 +1,8 @@
-import vrep as v
-from common import ReturnCommandError
-from joints import Joints
-from sensors import Sensors
-from simulationstate import SimulationState
+from .vrep import vrep as v
+from .common import ReturnCommandError
+from .joints import Joints
+from .sensors import Sensors
+from .simulationstate import SimulationState
 
 
 class VRepApi:

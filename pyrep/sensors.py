@@ -1,7 +1,7 @@
-import vrep as v
-import vrepConst as vc
-from common import MatchObjTypeError, NotFoundComponentError
-from common import Vec3, EulerAngles
+from .vrep import vrep as v
+from .vrep import vrepConst as vc
+from .common import MatchObjTypeError, NotFoundComponentError
+from .common import Vec3, EulerAngles
 
 class ProximitySensor:
 
