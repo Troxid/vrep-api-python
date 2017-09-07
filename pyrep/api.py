@@ -26,6 +26,9 @@ class VRepApi:
             return VRepApi(res)
         else:
             raise ReturnCommandError(res)
+            
+    def close_connection():
+        v.simxFinish(self._id)
 
     def __enter__(self):
         self.simulation.start()
@@ -33,6 +36,7 @@ class VRepApi:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.simulation.stop()
+        self.close_connection()
 
 
 
