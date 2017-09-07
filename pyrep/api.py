@@ -27,7 +27,7 @@ class VRepApi:
         else:
             raise ReturnCommandError(res)
             
-    def close_connection():
+    def close_connection(self):
         v.simxFinish(self._id)
 
     def __enter__(self):
