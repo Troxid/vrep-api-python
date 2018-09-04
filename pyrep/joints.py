@@ -135,12 +135,11 @@ class Joints:
         """
         Retrieves the joint with next parameters:
             * Joint type: Spherical
-            * Joint mode: Force
+            * Joint mode: Passive
         """
         joint = self._get_joint_with_param(
             name,
-            [vc.sim_joint_revolute_subtype,  # bug in v-rep: return revolute, instead spherical
-             vc.sim_joint_revolute_subtype],  # bug in v-rep: return revolute, instead spherical
+            [vc.sim_joint_spherical_subtype],
             vc.sim_jointmode_passive)
         return SphericalJoint(joint)
 
@@ -192,16 +191,14 @@ class Joints:
         """
         joint = self._get_joint_with_param(
             name, [vc.sim_joint_revolute_subtype, vc.sim_joint_prismatic_subtype],
-            vc.sim_jointmode_motion) # bug in v-rep: return motion, instead force
+            vc.sim_jointmode_force)
         return JointWithVelocityControl(joint)
 
     def _get_joint_with_param(self, name, types, mode) -> AnyJoint:
         handle = self._get_object_handle(name)
         if handle is not None:
             type, curr_mode, limit, range = self._get_info_about_joint(handle)
-            if type == types[0] or \
-               type == types[1] and \
-               curr_mode == mode:
+            if type in types and curr_mode == mode:
                 return AnyJoint(self._id, handle)
             else:
                 raise MatchObjTypeError("Joint with name: \"" + name +
@@ -214,8 +211,10 @@ class Joints:
         data_type_code = 16
         code, handles, types_and_mode, limits_and_ranges, string_data = v.simxGetObjectGroupData(
             self._id, obj_type_code, data_type_code, self._def_op_mode)
-        if handles.__contains__(handle):
-            return types_and_mode[0], types_and_mode[1], limits_and_ranges[0], limits_and_ranges[1]
+        if code == v.simx_return_ok:
+            index = handles.index(handle)
+            index = index * 2
+            return types_and_mode[index], types_and_mode[index+1], limits_and_ranges[index], limits_and_ranges[index+1]
         else:
             return None
 
